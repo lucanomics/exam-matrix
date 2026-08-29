@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Exam Matrix">
+  <rect width="64" height="64" fill="#2b5aa8"/>
+  <g fill="none" stroke="#faf8f5" stroke-width="3.4">
+    <rect x="18" y="18" width="28" height="28" rx="4"/>
+    <path d="M18 27h28M27 18v28"/>
+  </g>
+  <rect x="33" y="33" width="10" height="10" rx="1.6" fill="#faf8f5"/>
+</svg>

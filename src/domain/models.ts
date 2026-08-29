@@ -31,6 +31,11 @@ export interface Exam {
   isSample?: boolean;
   createdAt: Timestamp;
   updatedAt: Timestamp;
+  /**
+   * Exam-level fields an import could not map — blueprint weights, pass marks,
+   * syllabus versions. Kept verbatim so no legacy file loses information (§7).
+   */
+  legacy?: unknown;
 }
 
 export interface Subject {
