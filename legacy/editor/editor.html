@@ -222,7 +222,7 @@ h3.sh{font-size:14px;margin:20px 0 8px;padding-bottom:6px;border-bottom:1px soli
  * regenerate with: node scripts/build-editor.js */
 var ExamMatrix = (function () {
 
-/* ==== src/lib/text.js ==== */
+/* ==== src/pdf/lib/text.js ==== */
 /**
  * Pure text measurement. Kept separate from model.js so that layout.js and the
  * renderer can be bundled into the browser editor without dragging in fs, ajv
@@ -248,7 +248,7 @@ function visualLen(s = '') {
 }
 
 
-/* ==== src/lib/archetypes.js ==== */
+/* ==== src/pdf/lib/archetypes.js ==== */
 /**
  * Level 2 of the schema: exam-type-specific column sets.
  *
@@ -423,7 +423,7 @@ function archetypeRowLabel(archetype, lang = 'en') {
 }
 
 
-/* ==== src/lib/normalize.js ==== */
+/* ==== src/pdf/lib/normalize.js ==== */
 /**
  * Turns a raw parsed exam object into the shape the templates render.
  *
@@ -594,7 +594,7 @@ function normalizeExam(raw, { today = new Date() } = {}) {
 }
 
 
-/* ==== src/lib/layout.js ==== */
+/* ==== src/pdf/lib/layout.js ==== */
 /**
  * Adaptive matrix layout.
  *
@@ -605,7 +605,7 @@ function normalizeExam(raw, { today = new Date() } = {}) {
  */
 
 
-/** Millimetres. Derived from the @page margins in src/styles.css. */
+/** Millimetres. Derived from the @page margins in src/pdf/print.css. */
 const GEOM = {
   portrait:  { usable: 180, rowLabel: 32 },
   landscape: { usable: 271, rowLabel: 34 },
@@ -696,7 +696,7 @@ function columnWidths(chunk, rows, orientation) {
 }
 
 
-/* ==== src/lib/recall.js ==== */
+/* ==== src/pdf/lib/recall.js ==== */
 /**
  * Recall Edition generator.
  *
@@ -839,7 +839,7 @@ function applyRecall(model) {
 }
 
 
-/* ==== src/render.js ==== */
+/* ==== src/pdf/render.js ==== */
 /**
  * HTML generation. Every page type lives here; nothing in this file knows
  * about YAML, and nothing in lib/ knows about markup.
@@ -1563,7 +1563,7 @@ const MARK_HELP = {
 };
 const ALL_MARKS = ["core", "distinction", "exception", "trap", "update", "evidence"];
 
-/* 시험 종류별 추천 비교 기준. src/lib/archetypes.js 와 같은 내용을 쉬운 말로. */
+/* 시험 종류별 추천 비교 기준. src/pdf/lib/archetypes.js 와 같은 내용을 쉬운 말로. */
 const PRESETS = [
   { id: "concept", name: "개념 · 이론", eg: "사회, 윤리, 경영학",
     cols: ["뜻", "핵심 특징", "갈리는 점", "예외", "함정"] },
@@ -1684,7 +1684,7 @@ function buildYaml() {
   const e = S.exam, L = [];
   const lang = e.lang === "en" ? "en" : "ko";
   L.push("# " + (e.name || "시험표"));
-  L.push("# tools/editor.html 에서 생성됨");
+  L.push("# legacy/editor/editor.html 에서 생성됨");
   L.push("");
   L.push("exam:");
   L.push("  name: " + sc(e.name || "제목 없는 시험"));

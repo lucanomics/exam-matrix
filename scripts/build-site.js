@@ -30,7 +30,7 @@ function copyTree(src, dest) {
 }
 
 copyTree(path.join(ROOT, 'output'), FILES);
-fs.copyFileSync(path.join(ROOT, 'tools', 'editor.html'), path.join(OUT, 'editor.html'));
+fs.copyFileSync(path.join(ROOT, 'legacy', 'editor', 'editor.html'), path.join(OUT, 'editor.html'));
 
 const kb = (p) => Math.round(fs.statSync(p).size / 1024);
 const enc = (p) => p.split('/').map(encodeURIComponent).join('/');
