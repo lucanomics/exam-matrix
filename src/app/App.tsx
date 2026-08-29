@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { store } from '../data/store.ts';
 import { useApp } from './hooks.ts';
@@ -29,7 +29,7 @@ export function App() {
 }
 
 function Root() {
-  const { ready, settings, exams, error } = useApp();
+  const { ready, settings, error } = useApp();
   const [paletteOpen, setPaletteOpen] = useState(false);
   const capture = useCapture();
   const location = useLocation();
@@ -62,9 +62,16 @@ function Root() {
     return () => window.removeEventListener('keydown', onKey);
   }, [capture]);
 
-  /* Move focus to the page heading on navigation, so the keyboard and a screen
-     reader both land in the new content rather than back at the top of the nav. */
+  /*
+   * Move focus into the new content on navigation, so a keyboard or screen
+   * reader user lands where they just went rather than back at the top of the
+   * nav. Skipped on the very first render: there, the browser's own starting
+   * point is the top of the document, which is what puts the skip link first
+   * in the tab order — moving focus would quietly take that away.
+   */
+  const firstRender = useRef(true);
   useEffect(() => {
+    if (firstRender.current) { firstRender.current = false; return; }
     document.getElementById('main')?.focus?.();
   }, [location.pathname]);
 
@@ -84,12 +91,17 @@ function Root() {
     );
   }
 
-  const needsOnboarding = exams.length === 0 && !settings.onboarded;
-  if (needsOnboarding && location.pathname !== '/welcome') {
-    return <Navigate to="/welcome" replace />;
+  /*
+   * `onboarded` is the only signal here, deliberately. Exam count is not: the
+   * wizard creates an exam at step 1 and would otherwise redirect itself away
+   * halfway through. Boot sets `onboarded` for anyone who already has data —
+   * a returning learner, or one whose old editor save was just converted — so
+   * the wizard is never shown twice, even when the URL still points at it.
+   */
+  if (!settings.onboarded) {
+    return location.pathname === '/welcome' ? <Onboarding /> : <Navigate to="/welcome" replace />;
   }
-
-  if (location.pathname === '/welcome') return <Onboarding />;
+  if (location.pathname === '/welcome') return <Navigate to="/" replace />;
 
   return (
     <>

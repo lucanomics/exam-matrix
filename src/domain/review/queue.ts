@@ -142,8 +142,16 @@ export function selectCandidates(opts: QueueOptions): QueueEntry[] {
 /* ------------------------------------------------------------ ordering --- */
 
 /**
- * Round-robin over groups, largest first. Guarantees maximal separation of
- * same-group entries for any distribution, without randomness.
+ * Spread entries so that consecutive items rarely share a group (a topic, in
+ * practice). Greedy: at each step take from the largest remaining group that is
+ * not the one just placed, which is the optimal arrangement for this problem
+ * and degrades gracefully when one group is more than half the session.
+ *
+ * A plain round-robin is not good enough: it drains the small groups first and
+ * then emits the dominant group as one unbroken run at the end, which is
+ * exactly the "ten near-identical cards in a row" this is meant to prevent.
+ *
+ * Deterministic — ties break on the group key, never on Map insertion order.
  */
 export function spreadByGroup<T>(entries: T[], groupOf: (e: T) => string): T[] {
   if (entries.length < 3) return entries.slice();
@@ -155,26 +163,23 @@ export function spreadByGroup<T>(entries: T[], groupOf: (e: T) => string): T[] {
     if (arr) arr.push(e);
     else groups.set(k, [e]);
   }
-  // Ties broken by key so the result never depends on Map insertion order.
-  const buckets = [...groups.entries()]
-    .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]))
-    .map(([, v]) => v);
 
   const out: T[] = [];
-  let placed = 0;
-  const total = entries.length;
-  while (placed < total) {
-    let movedThisPass = false;
-    for (const bucket of buckets) {
-      const next = bucket.shift();
-      if (next === undefined) continue;
-      // Avoid immediate repetition of a group when another bucket still has room.
-      out.push(next);
-      placed++;
-      movedThisPass = true;
-    }
-    if (!movedThisPass) break;
-    buckets.sort((a, b) => b.length - a.length);
+  let lastKey: string | null = null;
+
+  while (out.length < entries.length) {
+    const ranked = [...groups.entries()]
+      .filter(([, v]) => v.length > 0)
+      .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+    if (ranked.length === 0) break;
+
+    // Prefer any group other than the one just used; fall back only when the
+    // dominant group is all that is left.
+    const pick = ranked.find(([k]) => k !== lastKey) ?? ranked[0]!;
+    const next = pick[1].shift();
+    if (next === undefined) break;
+    out.push(next);
+    lastKey = pick[0];
   }
   return out;
 }

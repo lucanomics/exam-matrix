@@ -12,9 +12,16 @@ import type {
 } from './models.ts';
 import { newId } from './ids.ts';
 
-/** Relations are undirected: aId/bId are stored sorted so a pair is unique. */
+/**
+ * Relations are undirected: aId/bId are stored sorted so a pair is unique.
+ *
+ * `at` exists so an importer can stamp a whole conversion with one clock —
+ * without it, a migration run twice on the same file produces records that
+ * differ only by a millisecond, which makes the conversion untestable.
+ */
 export function makeRelation(
-  examId: ID, aId: ID, bId: ID, kind: ConfusionKind = 'confused_with', note?: string,
+  examId: ID, aId: ID, bId: ID, kind: ConfusionKind = 'confused_with',
+  note?: string, at: Date | string = new Date(),
 ): ConfusionRelation {
   const [x, y] = aId < bId ? [aId, bId] : [bId, aId];
   return {
@@ -24,7 +31,7 @@ export function makeRelation(
     bId: y,
     kind,
     ...(note ? { note } : {}),
-    createdAt: new Date().toISOString(),
+    createdAt: new Date(at).toISOString(),
   };
 }
 

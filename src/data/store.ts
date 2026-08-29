@@ -91,8 +91,19 @@ class Store {
           ? settings.activeExamId
           : exams[0]?.id;
 
+      // Anyone who already has an exam has been set up, however they got there:
+      // a previous visit, an import, or a converted editor save. Recording that
+      // is what stops the wizard reappearing over the top of their data.
+      let current = settings;
+      if (exams.length > 0 && !settings.onboarded) {
+        current = await writeSettings({ onboarded: true }, db);
+      }
+
       const snapshot = await loadExamSnapshot(activeExamId, db);
-      this.set({ ready: true, exams, settings, snapshot, ...(activeExamId ? { activeExamId } : {}) });
+      this.set({
+        ready: true, exams, settings: current, snapshot,
+        ...(activeExamId ? { activeExamId } : {}),
+      });
     } catch (err) {
       this.set({ ready: true, error: (err as Error).message });
     }

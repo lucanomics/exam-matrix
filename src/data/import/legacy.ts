@@ -334,7 +334,7 @@ export function convertLegacyExamFile(
       itemA.confusedWithIds = [itemB.id];
       itemB.confusedWithIds = [itemA.id];
       items.push(itemA, itemB);
-      relations.push(makeRelation(examId, itemA.id, itemB.id, 'contrasts_with', text(p.why) || undefined));
+      relations.push(makeRelation(examId, itemA.id, itemB.id, 'contrasts_with', text(p.why) || undefined, stamp));
     }
 
     /* traps — the examiner's own phrasing is the prompt */

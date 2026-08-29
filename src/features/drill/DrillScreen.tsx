@@ -151,14 +151,13 @@ function Card({ entry, index, total, mode, onDone, onEdit, onLink, mutate }: Car
     if (!ox) window.setTimeout(() => inputRef.current?.focus(), 40);
   }, [ox]);
 
+  /**
+   * Grading is automatic only where it cannot be wrong: an O/X choice, or a
+   * typed answer that matches the stored one. Anything else is handed to the
+   * learner — no string comparison can tell whether "직접 접촉 여부" and "1차
+   * 자료인지" are the same answer, and guessing would corrupt the schedule.
+   */
   const autoGradable = ox || (typed.trim().length > 0 && answersMatch(typed, item.answer));
-
-  const reveal = useCallback(() => {
-    if (confidence === null || phase !== 'answer') return;
-    setPhase('reveal');
-    if (autoGradable) setCorrect(answersMatch(typed, item.answer));
-    window.setTimeout(() => revealRef.current?.focus(), 30);
-  }, [confidence, phase, autoGradable, typed, item.answer]);
 
   const commit = useCallback(
     async (isCorrect: boolean, failureReason: FailureReason | null) => {
@@ -187,10 +186,17 @@ function Card({ entry, index, total, mode, onDone, onEdit, onLink, mutate }: Car
 
   const grade = useCallback((isCorrect: boolean) => {
     setCorrect(isCorrect);
-    // A clean confident-correct needs no post-mortem; go straight through.
-    if (isCorrect && (confidence ?? 0) >= 3) void commit(true, null);
-    else { setPhase('graded'); void commit(isCorrect, null); }
-  }, [commit, confidence]);
+    void commit(isCorrect, null);
+  }, [commit]);
+
+  const reveal = useCallback(() => {
+    if (confidence === null || phase !== 'answer') return;
+    setPhase('reveal');
+    // An auto-gradable card must be committed here, not left waiting for a
+    // 맞음/틀림 tap that will never be offered — otherwise it is a dead end.
+    if (autoGradable) void commit(answersMatch(typed, item.answer), null);
+    window.setTimeout(() => revealRef.current?.focus(), 30);
+  }, [confidence, phase, autoGradable, typed, item.answer, commit]);
 
   const finish = useCallback(() => {
     if (correct === null || confidence === null) return;
