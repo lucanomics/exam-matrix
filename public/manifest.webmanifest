@@ -1,0 +1,16 @@
+{
+  "name": "Exam Matrix — 헷갈림 지우기",
+  "short_name": "Exam Matrix",
+  "description": "헷갈리는 것만 모아 반복해서 없애는 학습 도구. 계정 없이, 내 기기 안에서.",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#faf8f5",
+  "theme_color": "#faf8f5",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "./icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Builds tools/editor.html from tools/editor.template.html.
+ * Builds legacy/editor/editor.html from legacy/editor/editor.template.html.
  *
  * Inlines two things, because the editor must work when opened straight from
  * the filesystem — no server, no npm, no network, which rules out both a CDN
@@ -8,7 +8,7 @@
  *
  *   1. js-yaml, for the Load button's parser.
  *   2. The real renderer — the same archetypes, layout engine, recall generator
- *      and page templates the Node build uses, plus src/styles.css. This is what
+ *      and page templates the Node build uses, plus src/pdf/print.css. This is what
  *      lets the browser produce the actual PDF via the print dialog instead of
  *      handing the learner a YAML file and a terminal command.
  *
@@ -25,12 +25,12 @@ const ROOT = process.cwd();
 
 /** Dependency order. Every one of these must be free of Node built-ins. */
 const MODULES = [
-  'src/lib/text.js',
-  'src/lib/archetypes.js',
-  'src/lib/normalize.js',
-  'src/lib/layout.js',
-  'src/lib/recall.js',
-  'src/render.js',
+  'src/pdf/lib/text.js',
+  'src/pdf/lib/archetypes.js',
+  'src/pdf/lib/normalize.js',
+  'src/pdf/lib/layout.js',
+  'src/pdf/lib/recall.js',
+  'src/pdf/render.js',
 ];
 
 /** What the editor needs off the bundle. */
@@ -61,7 +61,7 @@ const bundleBody = MODULES
   .map((f) => `\n/* ==== ${f} ==== */\n` + toScript(fs.readFileSync(path.join(ROOT, f), 'utf8'), f))
   .join('\n');
 
-const css = fs.readFileSync(path.join(ROOT, 'src', 'styles.css'), 'utf8');
+const css = fs.readFileSync(path.join(ROOT, 'src', 'pdf', 'print.css'), 'utf8');
 
 const renderer = `/*! Exam Matrix renderer — bundled from src/. Do not edit by hand;
  * regenerate with: node scripts/build-editor.js */
@@ -83,13 +83,13 @@ const version = JSON.parse(
 const yamlBanner = `/*! js-yaml ${version} — MIT License — https://github.com/nodeca/js-yaml
  * Vendored so this file works offline from file://. */\n`;
 
-let out = fs.readFileSync(path.join(ROOT, 'tools', 'editor.template.html'), 'utf8');
+let out = fs.readFileSync(path.join(ROOT, 'legacy', 'editor', 'editor.template.html'), 'utf8');
 for (const [token, payload] of [['/*JSYAML*/', yamlBanner + lib], ['/*RENDERER*/', renderer]]) {
   if (!out.includes(token)) throw new Error(`Placeholder ${token} not found in the template.`);
   out = out.replace(token, () => payload);
 }
 
-const dest = path.join(ROOT, 'tools', 'editor.html');
+const dest = path.join(ROOT, 'legacy', 'editor', 'editor.html');
 fs.writeFileSync(dest, out);
-console.log(`  tools/editor.html   ${(out.length / 1024).toFixed(0)} KB`);
+console.log(`  legacy/editor/editor.html   ${(out.length / 1024).toFixed(0)} KB`);
 console.log(`  bundled: js-yaml ${version}, ${MODULES.length} renderer modules, styles.css`);

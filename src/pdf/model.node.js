@@ -11,9 +11,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
 import Ajv from 'ajv';
-import { stripEmpty, normalizeExam } from './normalize.js';
+import { stripEmpty, normalizeExam } from './lib/normalize.js';
 
-export { visualLen } from './text.js';
+export { visualLen } from './lib/text.js';
 
 export function loadSchema() {
   const p = path.join(process.cwd(), 'schema', 'exam.schema.json');

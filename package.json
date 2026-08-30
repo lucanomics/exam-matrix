@@ -2,21 +2,45 @@
   "name": "exam-matrix",
   "version": "1.0.0",
   "private": true,
-  "description": "Exam Matrix — a discrimination-and-retrieval PDF study-note system for certification exams",
+  "description": "Exam Matrix — 헷갈림을 모아 반복해서 없애는 학습 도구",
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.js",
-    "build:blank": "node scripts/build-blank.js",
-    "build:editor": "node scripts/build-editor.js",
-    "build:site": "node scripts/build-site.js",
-    "build:all": "node scripts/build.js && node scripts/build-blank.js && node scripts/build-editor.js",
+    "dev": "vite",
+    "build": "vite build && node scripts/build-static.js",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "node scripts/e2e.js",
+    "test:all": "npm run typecheck && vitest run && node scripts/e2e.js && node legacy/editor/test-editor.js",
+    "pdf": "node scripts/build.js",
+    "pdf:blank": "node scripts/build-blank.js",
+    "pdf:all": "node scripts/build.js && node scripts/build-blank.js",
+    "pdf:qa": "node scripts/visual-qa.js",
     "init": "node scripts/init-exam.js",
-    "qa": "node scripts/visual-qa.js",
-    "test": "node scripts/test-editor.js"
+    "legacy:editor": "node legacy/editor/build-editor.js",
+    "legacy:test": "node legacy/editor/test-editor.js",
+    "qa": "node scripts/app-qa.js"
   },
   "dependencies": {
     "ajv": "^8.17.1",
+    "idb": "^8.0.3",
     "js-yaml": "^4.1.0",
-    "playwright-core": "^1.56.1"
+    "playwright-core": "^1.56.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.3"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^26.4.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.1",
+    "fake-indexeddb": "^6.2.5",
+    "jsdom": "^30.0.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   }
 }

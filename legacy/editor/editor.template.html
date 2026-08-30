@@ -235,7 +235,7 @@ const MARK_HELP = {
 };
 const ALL_MARKS = ["core", "distinction", "exception", "trap", "update", "evidence"];
 
-/* 시험 종류별 추천 비교 기준. src/lib/archetypes.js 와 같은 내용을 쉬운 말로. */
+/* 시험 종류별 추천 비교 기준. src/pdf/lib/archetypes.js 와 같은 내용을 쉬운 말로. */
 const PRESETS = [
   { id: "concept", name: "개념 · 이론", eg: "사회, 윤리, 경영학",
     cols: ["뜻", "핵심 특징", "갈리는 점", "예외", "함정"] },
@@ -356,7 +356,7 @@ function buildYaml() {
   const e = S.exam, L = [];
   const lang = e.lang === "en" ? "en" : "ko";
   L.push("# " + (e.name || "시험표"));
-  L.push("# tools/editor.html 에서 생성됨");
+  L.push("# legacy/editor/editor.html 에서 생성됨");
   L.push("");
   L.push("exam:");
   L.push("  name: " + sc(e.name || "제목 없는 시험"));

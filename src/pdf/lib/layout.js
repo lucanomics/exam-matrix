@@ -9,7 +9,7 @@
 
 import { visualLen } from './text.js';
 
-/** Millimetres. Derived from the @page margins in src/styles.css. */
+/** Millimetres. Derived from the @page margins in src/pdf/print.css. */
 const GEOM = {
   portrait:  { usable: 180, rowLabel: 32 },
   landscape: { usable: 271, rowLabel: 34 },

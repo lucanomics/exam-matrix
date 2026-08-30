@@ -16,7 +16,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
-import { ARCHETYPES, ARCHETYPE_KEYS } from '../src/lib/archetypes.js';
+import { ARCHETYPES, ARCHETYPE_KEYS } from '../src/pdf/lib/archetypes.js';
 
 const argv = process.argv.slice(2);
 const outFlag = argv.indexOf('--out');

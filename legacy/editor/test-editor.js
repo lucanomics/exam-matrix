@@ -21,13 +21,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright-core';
 import yaml from 'js-yaml';
-import { stripEmpty, normalizeExam } from '../src/lib/normalize.js';
-import { applyRecall } from '../src/lib/recall.js';
-import { renderDocument } from '../src/render.js';
+import { stripEmpty, normalizeExam } from '../../src/pdf/lib/normalize.js';
+import { applyRecall } from '../../src/pdf/lib/recall.js';
+import { renderDocument } from '../../src/pdf/render.js';
 
 const ROOT = process.cwd();
-const CSS = fs.readFileSync(path.join(ROOT, 'src', 'styles.css'), 'utf8');
-const EDITOR = 'file://' + path.join(ROOT, 'tools', 'editor.html');
+const CSS = fs.readFileSync(path.join(ROOT, 'src', 'pdf', 'print.css'), 'utf8');
+const EDITOR = 'file://' + path.join(ROOT, 'legacy', 'editor', 'editor.html');
 
 let failed = 0;
 const ok = (name, pass, detail = '') => {

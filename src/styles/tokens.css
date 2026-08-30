@@ -1,0 +1,191 @@
+/*
+ * Design tokens.
+ *
+ * The look this is aiming at is a well-made reference book: warm paper, dark
+ * ink, restrained colour used to mean something rather than to decorate. Five
+ * semantic colours and no others, each one also carried by a label and a border
+ * so the meaning survives greyscale, colour-blindness and a dimmed phone (§17).
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* --- surfaces ---------------------------------------------------------- */
+  --paper:        #faf8f5;
+  --surface:      #ffffff;
+  --surface-2:    #f3f0ea;
+  --surface-sunk: #efece5;
+  --overlay:      rgba(24, 22, 18, 0.42);
+
+  /* --- ink --------------------------------------------------------------- */
+  --ink:        #1c1b19;
+  --ink-2:      #4a4741;
+  --ink-3:      #78736a;
+  --ink-invert: #fbfaf8;
+
+  /* --- lines ------------------------------------------------------------- */
+  --line:        #e2ddd3;
+  --line-strong: #cdc6b8;
+
+  /* --- semantic. never used alone; always with a label or an icon --------- */
+  --c-neutral:    #6b675f;
+  --c-neutral-bg: #f1efe9;
+
+  --c-dist:       #2b5aa8;   /* 갈림 — where two things separate            */
+  --c-dist-bg:    #e8eefa;
+  --c-dist-line:  #b9cdec;
+
+  --c-unsure:     #97620a;   /* 애매 — correct but not stable               */
+  --c-unsure-bg:  #fbf1de;
+  --c-unsure-line:#e8cf9d;
+
+  --c-trap:       #ad2f26;   /* 함정 — repeated error, dangerous            */
+  --c-trap-bg:    #fbeae8;
+  --c-trap-line:  #eec1bb;
+
+  --c-stable:     #256b45;   /* 안정 — it holds up                          */
+  --c-stable-bg:  #e5f2ea;
+  --c-stable-line:#b3d9c4;
+
+  --accent:       #2b5aa8;
+  --accent-hover: #23488a;
+  --accent-soft:  #e8eefa;
+  --focus:        #1c6fd8;
+
+  /* --- type -------------------------------------------------------------- */
+  --font-sans:
+    'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Segoe UI',
+    Roboto, system-ui, sans-serif;
+  --font-serif: 'Noto Serif KR', 'Apple SD Gothic Neo', Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+
+  /* Body text never goes below 15px. Tables may be dense; prose may not. */
+  --fs-xs:   0.75rem;   /* 12px — labels, counters only        */
+  --fs-sm:   0.8125rem; /* 13px — table cells, metadata        */
+  --fs-base: 0.9375rem; /* 15px — body                          */
+  --fs-md:   1.0625rem; /* 17px — prompts in lists              */
+  --fs-lg:   1.375rem;  /* 22px — screen titles                 */
+  --fs-xl:   1.75rem;   /* 28px — counters                      */
+  --fs-2xl:  2.25rem;   /* 36px — the drill prompt              */
+
+  --lh-tight: 1.32;
+  --lh-body: 1.68;
+
+  /* --- space ------------------------------------------------------------- */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+
+  --r-sm: 5px;
+  --r-md: 9px;
+  --r-lg: 14px;
+
+  --shadow-1: 0 1px 2px rgba(28, 27, 25, 0.06), 0 1px 3px rgba(28, 27, 25, 0.04);
+  --shadow-2: 0 4px 14px rgba(28, 27, 25, 0.10), 0 1px 3px rgba(28, 27, 25, 0.06);
+  --shadow-3: 0 18px 48px rgba(28, 27, 25, 0.18);
+
+  --topbar-h: 56px;
+  --nav-w: 232px;
+  --rail-w: 68px;
+  --bottom-nav-h: 58px;
+  --content-max: 1180px;
+
+  /* Touch targets. 44px is the floor everywhere, not just on phones. */
+  --tap: 44px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper:        #131316;
+    --surface:      #1b1b20;
+    --surface-2:    #232329;
+    --surface-sunk: #101013;
+    --overlay:      rgba(0, 0, 0, 0.6);
+
+    --ink:        #eceae7;
+    --ink-2:      #b5b2ac;
+    --ink-3:      #86837d;
+    --ink-invert: #131316;
+
+    --line:        #2e2e35;
+    --line-strong: #45454e;
+
+    --c-neutral:    #a3a09a;
+    --c-neutral-bg: #26262c;
+
+    --c-dist:       #8ab0ee;
+    --c-dist-bg:    #1a2438;
+    --c-dist-line:  #33507f;
+
+    --c-unsure:     #e0ae5c;
+    --c-unsure-bg:  #302512;
+    --c-unsure-line:#6b5225;
+
+    --c-trap:       #f08a80;
+    --c-trap-bg:    #351a18;
+    --c-trap-line:  #7a3a34;
+
+    --c-stable:     #74c79b;
+    --c-stable-bg:  #14291e;
+    --c-stable-line:#2f5f45;
+
+    --accent:       #8ab0ee;
+    --accent-hover: #a6c4f3;
+    --accent-soft:  #1a2438;
+    --focus:        #6da4f0;
+
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.45);
+    --shadow-3: 0 18px 48px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* An explicit dark choice must win over a light system setting. */
+:root[data-theme='dark'] {
+  --paper:        #131316;
+  --surface:      #1b1b20;
+  --surface-2:    #232329;
+  --surface-sunk: #101013;
+  --overlay:      rgba(0, 0, 0, 0.6);
+
+  --ink:        #eceae7;
+  --ink-2:      #b5b2ac;
+  --ink-3:      #86837d;
+  --ink-invert: #131316;
+
+  --line:        #2e2e35;
+  --line-strong: #45454e;
+
+  --c-neutral:    #a3a09a;
+  --c-neutral-bg: #26262c;
+
+  --c-dist:       #8ab0ee;
+  --c-dist-bg:    #1a2438;
+  --c-dist-line:  #33507f;
+
+  --c-unsure:     #e0ae5c;
+  --c-unsure-bg:  #302512;
+  --c-unsure-line:#6b5225;
+
+  --c-trap:       #f08a80;
+  --c-trap-bg:    #351a18;
+  --c-trap-line:  #7a3a34;
+
+  --c-stable:     #74c79b;
+  --c-stable-bg:  #14291e;
+  --c-stable-line:#2f5f45;
+
+  --accent:       #8ab0ee;
+  --accent-hover: #a6c4f3;
+  --accent-soft:  #1a2438;
+  --focus:        #6da4f0;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-3: 0 18px 48px rgba(0, 0, 0, 0.6);
+}

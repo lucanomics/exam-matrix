@@ -11,13 +11,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright-core';
-import { loadExam } from '../src/lib/model.js';
-import { applyRecall } from '../src/lib/recall.js';
-import { renderDocument, footerTemplate, EDITIONS } from '../src/render.js';
+import { loadExam } from '../src/pdf/model.node.js';
+import { applyRecall } from '../src/pdf/lib/recall.js';
+import { renderDocument, footerTemplate, EDITIONS } from '../src/pdf/render.js';
 
 const ROOT = process.cwd();
 const OUT = path.join(ROOT, 'output');
-const CSS = fs.readFileSync(path.join(ROOT, 'src', 'styles.css'), 'utf8');
+const CSS = fs.readFileSync(path.join(ROOT, 'src', 'pdf', 'print.css'), 'utf8');
 
 const argv = process.argv.slice(2);
 const flag = (name, dflt) => {

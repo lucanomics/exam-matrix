@@ -17,11 +17,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright-core';
-import { renderBlank, blankFooter, PAGE_ORDER, PAGE_LABELS } from '../src/blank.js';
+import { renderBlank, blankFooter, PAGE_ORDER, PAGE_LABELS } from '../src/pdf/blank.js';
 
 const ROOT = process.cwd();
 const OUT = path.join(ROOT, 'output', 'blank');
-const css = fs.readFileSync(path.join(ROOT, 'src', 'styles.css'), 'utf8');
+const css = fs.readFileSync(path.join(ROOT, 'src', 'pdf', 'print.css'), 'utf8');
 const langs = ['ko', 'en'];
 
 fs.mkdirSync(OUT, { recursive: true });
