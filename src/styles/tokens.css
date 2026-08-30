@@ -89,6 +89,7 @@
   --shadow-2: 0 4px 14px rgba(28, 27, 25, 0.10), 0 1px 3px rgba(28, 27, 25, 0.06);
   --shadow-3: 0 18px 48px rgba(28, 27, 25, 0.18);
 
+  --topbar-h: 56px;
   --nav-w: 232px;
   --rail-w: 68px;
   --bottom-nav-h: 58px;

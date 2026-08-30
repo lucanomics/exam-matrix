@@ -271,8 +271,11 @@ table.matrix th, table.matrix td {
   font-size: var(--fs-sm); text-align: left;
 }
 table.matrix thead th {
-  background: var(--surface-2); position: sticky; top: 0; z-index: 2;
+  background: var(--surface-2); z-index: 2;
   font-weight: 650; padding: var(--s-2);
+  /* The page scrolls, not the wrapper, so the header sticks to the viewport —
+     and must clear the app's own sticky top bar rather than hide behind it. */
+  position: sticky; top: var(--topbar-h);
 }
 table.matrix tbody th {
   background: var(--surface-2); position: sticky; left: 0; z-index: 1;

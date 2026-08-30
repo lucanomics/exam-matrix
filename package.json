@@ -19,7 +19,8 @@
     "pdf:qa": "node scripts/visual-qa.js",
     "init": "node scripts/init-exam.js",
     "legacy:editor": "node legacy/editor/build-editor.js",
-    "legacy:test": "node legacy/editor/test-editor.js"
+    "legacy:test": "node legacy/editor/test-editor.js",
+    "qa": "node scripts/app-qa.js"
   },
   "dependencies": {
     "ajv": "^8.17.1",

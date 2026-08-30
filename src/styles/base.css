@@ -193,3 +193,10 @@ hr.rule { border: 0; border-top: 1px solid var(--line); margin: var(--s-4) 0; }
     transition-duration: .01ms !important;
   }
 }
+
+/* On a narrow screen an inline hint squeezes its label into an awkward wrap
+   ("답을 / 적어보세요"). Give each its own line instead. */
+@media (max-width: 620px) {
+  .field__label { display: block; }
+  .field__hint { display: block; margin-top: 2px; }
+}

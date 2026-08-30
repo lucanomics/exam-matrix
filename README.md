@@ -1,486 +1,265 @@
-# Exam Matrix · 시험표 만들기
+# Exam Matrix
 
-**헷갈리는 걸 표로 만들면, 시험지가 나옵니다.**
+**Exam Matrix는 틀린 문제를 저장하는 곳이 아니라, 시험장에서 다시 틀릴 가능성이 있는
+헷갈림을 모아 반복해서 없애는 학습 도구입니다.**
 
-헷갈리는 것 둘을 나란히 놓고 뭐가 다른지 칸을 채우면 —
-**전체본 · 빈칸 문제지 · 정답지** 세 가지 A4 PDF가 만들어집니다.
+아는데도 점수를 잃는 자리는 거의 정해져 있습니다. 두 개념의 경계, 원칙의 예외,
+출제자가 말을 바꿔 놓은 선지. Exam Matrix는 그 경계만 모아서, 답을 가린 채 다시
+꺼내보게 하고, 흔들리는 것만 남을 때까지 목록을 줄여나갑니다.
 
-## 3분 만에 시작하기 (설치 없음)
-
-1. **`tools/editor.html` 을 브라우저로 엽니다.** 더블클릭하면 됩니다.
-   서버도, npm 도, 인터넷도 필요 없습니다. 아이패드에서도 열립니다.
-2. **“새로 만들기”** → 질문 다섯 개에 답합니다.
-   시험 이름 → 헷갈리는 것 → 비교 기준 → 표 채우기 → 끝.
-3. **인쇄 창에서 “PDF로 저장”** 을 고릅니다.
-
-만든 내용은 브라우저에 자동 저장됩니다. 다른 기기에서 쓰려면
-**파일로 저장**을 눌러 `.yaml` 을 받아두고, 나중에 **불러오기** 하세요.
-
-**손으로 쓰고 싶다면** `output/blank/ko/` 의 낱장 PDF를 쓰세요.
-굿노트·노타빌리티에 **속지 템플릿**으로 등록해서 계속 추가할 수 있습니다.
-
-터미널을 쓸 줄 안다면 `npm run build:all` 로 YAML → PDF 를 일괄 생성할 수 있습니다.
-아래는 그 자세한 설명입니다.
+계정이 없습니다. 서버로 아무것도 보내지 않습니다. 데이터는 브라우저 안에 있고,
+언제든 파일로 꺼낼 수 있습니다.
 
 ---
 
-## In English
-
-**A printable study-note system built on discrimination and retrieval, not summarisation.**
-Give it a YAML file describing what your exam actually distinguishes; it gives you
-an A4 workbook, a retrieval-practice twin with the important cells withheld, and
-an answer key.
-
-Generalised from the 셀프엑셀표 ("self Excel table") method taught by 문사탐 /
-문서연 — see [Design lineage](#design-lineage-from-the-reference-video).
-
-```bash
-npm install
-npm run build:all    # notes + blank templates + editor
-npm run qa           # inspect every generated PDF
-npm run init         # scaffold a YAML for your own exam
-```
-
-## Two ways in
-
-You do not have to write YAML by hand, and you do not have to type at all if you
-would rather write.
-
-### A. Type it — `tools/editor.html`
-
-Open the file in a browser. **No server, no npm, no network, and no terminal:
-the editor renders the PDF itself.** It bundles the same renderer the Node build
-uses — `scripts/build-editor.js` inlines `src/render.js`, the layout engine, the
-recall generator and `styles.css` — so what you print from the browser is
-byte-for-byte the document `scripts/build.js` produces. That parity is asserted
-by a test, not assumed.
-
-A five-step wizard walks a first-timer through it: exam name → what you confuse
-→ what to compare → fill the grid → print. Everything else (blueprint, error
-log, compression, evidence links) lives behind **전체 모드** so it is available
-without being in the way.
+## 학습 루프
 
 ```
-tools/editor.html  →  인쇄 → “PDF로 저장”          (no install)
-tools/editor.html  →  my-exam.yaml  →  npm run build   (if you want the CLI)
+문제를 풀다가 헷갈린다
+        ↓
+헷갈린 것 추가          출처 · 주제 · 문제 · 정답 · 왜        (15~30초)
+        ↓
+나중에 다시 만난다      답은 가려져 있다
+        ↓
+답을 떠올린다           적어보거나, 머릿속으로
+        ↓
+확신도를 고른다         찍음 / 애매함 / 아는 것 같음 / 확실함   ← 공개 전에
+        ↓
+정답과 근거가 나온다    내 답과 나란히
+        ↓
+왜 틀렸는지 고른다      비슷한 개념과 혼동 · 조건을 놓침 · 선지에 낚임 …
+        ↓
+다시 나올 날이 정해진다 확신 있게 맞히면 멀어지고, 애매하면 가까워진다
+        ↓
+헷갈리는 짝을 비교표에 놓는다 → 칸을 가리고 다시 채운다
+        ↓
+남은 헷갈림이 줄어든다  → 시험 전날, 남은 것만 압축한다
 ```
 
-### B. Print it blank and write — `output/blank/`
+이 순서가 제품의 전부이고, 화면은 이 순서를 강제하도록 만들어져 있습니다.
+**확신도는 반드시 답을 보기 전에 기록됩니다.** 보고 나서 고른 확신도는 아무 의미가
+없기 때문입니다.
 
-Empty forms in the same design language, sized for a stylus.
+### 맞혔다고 다 같은 게 아닙니다
 
-| File | Use |
-|---|---|
-| `output/blank/exam-matrix-blank-ko.pdf` · `-en.pdf` | The whole 12-page workbook, with PDF bookmarks |
-| `output/blank/ko/` · `output/blank/en/` | **One single-page PDF per form** |
-
-The per-page files exist because GoodNotes, Notability and Noteshelf all import a
-one-page PDF as a reusable **template** — you add that page as many times as you
-need inside a notebook. A twelve-page workbook cannot be used that way, so both
-forms ship. Two things are deliberate in these:
-
-- **The matrix column headers are blank, with a rule to write on and a small
-  dashed box for the marker code.** The comparison axes belong to the topic, so a
-  pre-printed set of columns would defeat the entire method.
-- **Rows are 19–21mm**, roughly twice the height of the typeset edition, because
-  that is what handwriting needs.
-
-Every topic-scoped sheet carries write-in **주제 / Topic** and **날짜 / Date**
-fields in the header — a stack of thirty identical matrix pages is useless
-without them.
-
-### Generated notes, once you have data
-
-| File | What it is |
-|---|---|
-| `output/universal-study-notes.pdf` | **L1** — the full matrix, everything visible |
-| `output/universal-study-notes-recall.pdf` | The same document with ~45% of the discriminating cells withheld, ruled for handwriting |
-| `output/universal-study-notes-answer-key.pdf` | Numbered answers for the recall edition |
-
----
-
-## Philosophy
-
-Most study templates are containers for summaries. This one is not, because
-summaries are not what exams test.
-
-An exam question is a **discrimination task**. You are shown four or five
-statements that are all plausible, and one differs from the others on a specific
-axis. Nothing in a linear summary prepares you for that, because a summary
-records *what a thing is* and never records *what separates it from the thing it
-will be confused with*. Candidates who "know the material" and still lose marks
-almost always lose them in the same place: the boundary between two adjacent
-concepts, or the exception to a rule they learned as absolute.
-
-So the unit of storage here is not the fact. It is the **cell** — one item, one
-axis, one value — sitting in a grid next to the items it is confused with.
-
-Three consequences follow, and they are the whole design:
-
-**1. The grid is a retrieval instrument, not a reference.**
-Re-reading a table feels like studying and is nearly worthless. The same table
-with cells withheld is a cued-recall test: the row and column labels stay as
-cues, the answer is gone, and you have to reconstruct it. That is why the Recall
-Edition is generated from the same data rather than maintained separately —
-there is no version of this system in which you *only* read.
-
-**2. Errors are the intake mechanism.**
-Every entry in the error log names the matrix cell it invalidates. Not the topic
-— the cell. "I got question 17 wrong" is not actionable; "my *deadline* column
-for administrative appeal is wrong" is. Dangling references fail the build, so
-the link cannot rot.
-
-**3. The notes are supposed to shrink.**
-L1 is complete. L2 is what you review on exam morning. L3 is one page you read in
-the last ten minutes. Deciding what to cut is itself a judgement about what the
-exam rewards, which is why the compression ladder is part of the system and not
-an afterthought. The schema caps "essential facts" at five and the build warns
-when the L3 sheet stops being a sheet.
-
-What this system deliberately does **not** have: streaks, scores, progress
-percentages, motivational quotes, or a review scheduler with opinions. The review
-tracker is six checkboxes and is the least prominent element on its page.
-
----
-
-## Workflow
-
-1. **Learn** the topic from whatever source you normally use. This system does
-   not replace that.
-2. **Identify what the exam distinguishes.** Not what the textbook covers — what
-   the questions force you to tell apart. This usually requires seeing real
-   questions first.
-3. **Define the comparison axes.** These become your columns. Steal the
-   archetype defaults to start, then replace them.
-4. **Populate the matrix.** Rows are the confusable items; cells hold both the
-   fact and, where it matters, the examiner's phrasing for it.
-5. **Add traps and exceptions.** Only things that can change an answer choice.
-   Trivia makes the document worse.
-6. **Link evidence.** Which past question tested this cell, and in what wording.
-7. **Use the Recall Edition.** Write in the blanks. Do not look first.
-8. **Solve questions.** The matrix is a stage, not a destination.
-9. **Update the matrix from your errors.** Each wrong answer edits a named cell.
-   Rebuild; the recall edition now tests the corrected cell.
-10. **Compress.** L1 → L2 → L3 as the date approaches.
-
----
-
-## The data model
-
-Content lives in YAML; presentation lives in `src/`. You can replace the data
-without touching a template.
-
-Three levels, which is how the system stays usable across unrelated exams
-without collapsing into a bag of optional fields:
-
-| Level | Scope | Who decides |
+|  | 맞음 | 틀림 |
 |---|---|---|
-| **L1 — Universal** | Exam metadata, blueprint, error log, review, compression ladder, evidence links | Fixed by the system |
-| **L2 — Archetype** | Default column sets for `concept`, `law`, `calculation`, `it`, `language`, `procedure` | You pick one of six |
-| **L3 — Topic** | The actual comparison axes for *this* topic | You write them |
+| **확신함** | 안정 — 간격이 크게 늘어납니다 | **위험한 착각** — 가장 먼저 고쳐야 합니다 |
+| **애매함** | **숨은 약점** — 채점은 정답이지만 시험장에서 흔들립니다 | 드러난 약점 |
 
-L2 exists so you never face a blank page. **L3 is where the value is** — the axes
-must match what your exam actually tests, and only you know that. Every example
-in `examples/` overrides L2 at L3; that is the intended usage.
-
-```yaml
-topics:
-  - id: tcp-udp
-    title: TCP vs UDP
-    archetype: it
-    one_sentence: >-            # withheld in the Recall Edition
-      TCP는 연결을 먼저 맺고 …
-    essentials: [ … ]           # five maximum, enforced
-
-    matrix:
-      row_label: 프로토콜
-      columns:                  # L3 — override the archetype freely
-        - { key: header, label_ko: 헤더 크기, mark: trap }
-      rows:
-        - label: TCP
-          cells:
-            header: { v: 20바이트 (옵션 제외), mark: trap }
-
-    decisive:                   # "if you had ONE criterion, what would it be?"
-      answer: …
-      pairs: [{ a: …, b: …, why: …, clue: … }]
-
-    traps:                      # keyed on the statement as the exam phrases it
-      - { cue: …, usually: …, exception: …, why: …, source: … }
-
-error_log:
-  - matrix_update: { topic: tcp-udp, row: TCP, column: header }   # structural
-```
-
-Full schema with field-by-field notes: [`schema/exam.schema.json`](schema/exam.schema.json).
-
-### Semantic markers
-
-`CORE` · `DISTINCTION` · `EXCEPTION` · `TRAP` · `UPDATE` · `EVIDENCE`
-
-Each is encoded three ways — a text label, a border treatment, and a tint —
-because the PDF will be photocopied in black and white and colour alone would not
-survive. `UPDATE` exists because law, tax and IT syllabi change between sittings
-and a correct-in-2023 cell is a wrong answer today.
+찍어서 맞힌 것은 1일 뒤에 다시 나옵니다. 애매하게 맞힌 것은 아무리 반복해도
+7일을 넘지 않습니다. 맞았지만 오래 걸린 답은 애매하게 맞힌 것으로 봅니다.
 
 ---
 
-## Adapting it to a new certification
+## 시작하기
+
+### 웹에서
+
+배포된 주소를 열면 바로 시작합니다. 설치도, 로그인도 없습니다.
+첫 화면에서 네 단계를 지나면 — 시험 만들기 → 과목 → 헷갈린 것 하나 → **그 자리에서
+한 번 풀어보기** — 학습 루프를 이미 한 바퀴 돈 상태가 됩니다.
+
+둘러보기만 하고 싶다면 **예시부터 둘러보기**를 누르세요. 작은 샘플 시험 하나가
+들어옵니다. 검증된 학습 자료가 아니라 화면을 보여주기 위한 예시이고, 설정에서
+지울 수 있습니다.
+
+### 내 컴퓨터에서
 
 ```bash
-npm run init
-```
-
-It asks the handful of questions whose answers change the document's structure —
-language, awarding body, date, which of the six archetypes fits, whether the
-content is version-sensitive — and writes a commented starter YAML with the
-matching column set and one skeleton topic. It builds immediately, so you can see
-the shape before you fill it in.
-
-Then, in order of importance:
-
-1. **Replace the columns.** The generated ones are a guess. After one past paper
-   you will know what the exam actually separates; rewrite the axes to match and
-   delete any column you are keeping out of politeness.
-2. **Choose rows that get confused.** A matrix with one row is a summary. Put the
-   thing next to the thing it is mistaken for.
-3. **Mark the cells.** `distinction`, `exception` and `trap` cells are withheld
-   preferentially in the Recall Edition, so marking is what tunes your practice.
-4. **Fill the error log as you go**, always naming a cell.
-
-Or skip the YAML entirely at first: print `output/blank/` and fill the forms by
-hand, then type up whatever survives. That order matches the source method,
-where the table is a precipitate of work already done rather than a container to
-fill.
-
-Building:
-
-```bash
-node scripts/build.js examples/law.yaml          # one file → output/examples/
-node scripts/build.js --primary law              # law owns the top-level filenames
-node scripts/build.js --html                     # keep the intermediate HTML
-node scripts/build-blank.js                      # rebuild the handwriting templates
-node scripts/build-editor.js                     # rebuild tools/editor.html
-node scripts/visual-qa.js --png                  # write page rasters to qa/
-```
-
----
-
-## Technical choices
-
-**HTML + CSS → Chromium print-to-PDF** (`playwright-core`), rather than Typst or
-LaTeX. The decision was made against what this document actually needs:
-
-| Requirement | Why this stack |
-|---|---|
-| Korean and Latin in one document | System Noto Sans/Serif CJK KR; Chromium shapes Hangul correctly and subsets the fonts into the PDF. `word-break: keep-all` stops Korean breaking mid-word — the single most visible difference between typeset and machine-set Hangul. |
-| Repeated header on page breaks | `thead { display: table-header-group }` is native and verified in QA. |
-| Portrait and landscape in one file | CSS named pages (`@page land`) — verified working before any of the design was written. |
-| Automatic pagination | Free. |
-| Print reliability | It is a browser print path, which is the most-tested PDF pipeline in existence. |
-
-Typst and LaTeX were not installed and would have needed CJK font plumbing;
-neither offered anything this document needs that Chromium does not. The real
-reason, though, is that the matrix layout requires *measuring content to choose a
-page orientation*, and doing that in JS next to the renderer is far simpler than
-in a macro language.
-
-**Adaptive layout.** `src/lib/layout.js` chooses portrait or landscape from
-column count and content density, and splits wide matrices across pages with the
-row-label column repeated. Font size is never the variable — a table that does
-not fit gets more page, or gets split. `src/render.js` then stretches row heights
-so a short matrix uses its page, and sizes the "detail I added myself" block to
-absorb whatever is left.
-
-**The editor is a single file with no build dependency at runtime.** `file://`
-blocks ES-module imports and there is no CDN to rely on offline, so the one thing
-it cannot hand-roll — a YAML *parser*, for the Load button — is vendored in by
-`scripts/build-editor.js`. The *emitter* is hand-written in the editor so its
-output matches the block-scalar and flow-map style the examples use, which keeps
-hand-edited and editor-generated files indistinguishable.
-
-**QA inspects the output, not the source.** `scripts/visual-qa.js` reads page
-geometry from `pdfinfo`, word bounding boxes from `pdftotext -bbox-layout`, and
-page ink from a greyscale raster, then fails the build on: non-A4 pages, any
-glyph within 6mm of a trim edge, text below 7pt, blank pages, replacement
-characters, a Korean document with no Hangul in its text layer, and matrix
-continuation pages missing their repeated header. It covers all 38 PDFs,
-including the blank templates (where the blank-page rule is suspended, since
-empty is the point).
-
-### Requirements
-
-Node 18+, and two system packages:
-
-```bash
-apt-get install fonts-noto-cjk poppler-utils   # fonts + QA tooling
 npm install
+npm run dev          # http://localhost:5173
 ```
-
-Without `fonts-noto-cjk` Korean will not render. `poppler-utils` is only needed
-for `npm run qa`.
 
 ---
 
-## Hosting it
+## 화면
 
-`vercel.json` + `scripts/build-site.js` assemble a static site in `public/`: the
-editor at `/editor.html` and every PDF under `/files/`, with a Korean landing
-page generated from whatever is actually in `output/`.
+| 화면 | 하는 일 |
+|---|---|
+| **오늘** | 지금 뭘 해야 하는지. 오늘 다시 볼 것 · 애매하게 맞은 것 · 반복해서 틀린 것 · 확신하고 틀린 것. 각 숫자를 누르면 그 항목만 모아 바로 복습이 시작됩니다. |
+| **복습** | 한 번에 한 문제. 답은 숨겨져 있고, 확신도를 고른 뒤에야 나옵니다. `O` `X`, `1`~`4`, `Enter` 로 손을 떼지 않고 진행할 수 있고, 화면을 눌러도 똑같이 됩니다. |
+| **비교표** | 헷갈리는 것을 나란히 놓고 칸을 채웁니다. **빈칸으로 풀기**를 누르면 중요한 칸이 사라지고, 다시 채워 넣은 결과가 칸별로 기록됩니다. 자주 틀리는 칸은 표에서 눈에 띄게 표시되고, 다음 빈칸으로 더 잘 뽑힙니다. |
+| **약점** | 확신하고 틀린 것, 애매하게 맞은 것, 아직 안 갈린 짝, 많이 틀리는 주제, 왜 틀렸는지, 확신과 실제 정답률의 차이. 모든 항목이 그것만 복습하는 링크입니다. |
+| **출처** | 교재 · 기출 · 모의고사별로 모아 봅니다. "2024 기출에서 헷갈렸던 것만 다시 풀기"가 한 번의 클릭입니다. |
+| **시험 전날** | L1(전체) → L2(전날 훑기) → L3(마지막 10분). 시스템이 위험한 순서로 줄여주고, 꼭 넣고 싶은 것은 직접 고정합니다. 여기서 인쇄합니다. |
+
+`Ctrl`/`Cmd` + `K` 로 문제·답·근거·주제·출처를 한 번에 찾습니다. `n` 은 어디서든
+헷갈린 것 담기입니다.
+
+---
+
+## 복습 간격은 숨기지 않습니다
+
+```
+0단계  오늘 다시    1단계  1일    2단계  3일
+3단계  7일          4단계  14일   5단계  30일    6단계  60일
+```
+
+- **틀리면** → 이번 복습 안에서 한 번 더, 그다음은 0단계부터.
+- **찍어서 맞으면** → 1일. 맞았어도 아는 게 아니기 때문입니다.
+- **애매하게 맞으면** → 한 칸만, 최대 7일까지.
+- **아는 것 같다** → 한 칸.
+- **확실하다** → 두 칸.
+- **맞았지만 오래 걸리면** → 애매하게 맞은 것으로 봅니다.
+
+모든 항목은 **"왜 지금 나왔나요?"** 에 답할 수 있습니다.
+*"어제 맞혔지만 확신이 없어서 다시 나왔습니다."* 이 투명함이 제품의 일부입니다.
+
+규칙은 전부 [`src/domain/review/scheduler.ts`](src/domain/review/scheduler.ts) 한
+곳에 있고, 테스트로 고정되어 있습니다.
+
+---
+
+## 내 데이터
+
+전부 브라우저의 IndexedDB 안에 있습니다. 서버로 나가지 않고, 계정도 없습니다.
+그래서 **백업은 직접 받으셔야 합니다.**
+
+- **전체 백업 (.json)** — 시험, 항목, 헷갈리는 짝, 비교표, 복습 기록, 설정까지 전부.
+- **YAML (.yaml)** — 예전부터 쓰던 형식. 사람이 읽고 고칠 수 있고, 터미널 빌드와
+  호환됩니다.
+- **인쇄 / PDF** — 전체본 · 빈칸 문제지 · 정답지.
+
+가져오기는 항상 **확인 → 미리보기 → 경고 → 반영** 순서입니다. 무엇이 몇 개
+들어오는지 먼저 보여드리고, "합치기"가 기본이며 "전부 바꾸기"는 무엇이 사라지는지
+말한 뒤에만 실행됩니다.
+
+### 예전 데이터
+
+예전 브라우저 편집기(`em.v2`)를 쓰셨다면 **첫 실행 때 자동으로 찾아서 옮깁니다.**
+원본은 지우지 않습니다. 새 모델에 자리가 없는 값(출제 비중, 합격 기준 등)은
+버리지 않고 그대로 보관하며, 백업 파일에도 함께 들어갑니다.
+
+예전 `examples/*.yaml` 파일도 그대로 가져올 수 있습니다.
+표는 비교표가 되고, 함정은 기출 표현을 문제로 삼는 항목이 되고, 오답 기록은
+이미 한 번 틀린 상태의 항목이 됩니다.
+
+---
+
+## 오프라인
+
+담기 · 편집 · 복습 · 비교표 · 검색 · 백업은 인터넷 없이 동작합니다.
+서비스 워커는 앱 껍데기만 캐시하고 그 이상은 하지 않습니다 — 학습 데이터는 애초에
+네트워크를 거치지 않기 때문입니다.
+
+---
+
+## 인쇄와 PDF
+
+시험장에는 휴대폰을 들고 갈 수 없습니다. 그래서 인쇄가 남아 있습니다.
+
+브라우저 인쇄 창에서 **PDF로 저장**을 고르면 A4 문서가 됩니다.
+
+| 판형 | 내용 |
+|---|---|
+| **전체본** | 모든 칸이 보이는 표 |
+| **빈칸 문제지** | 중요한 칸을 가린 인출 연습지 — 매번 같은 칸이 가려집니다 |
+| **정답지** | 빈칸 문제지의 번호별 정답 |
+
+손으로 쓰고 싶다면 `output/blank/ko/` 의 낱장 PDF를 쓰세요. 굿노트·노타빌리티에
+**속지 템플릿**으로 등록해서 계속 추가할 수 있습니다.
+
+터미널에서 일괄 생성할 수도 있습니다. 한글 렌더링에는 시스템 폰트가 필요합니다.
 
 ```bash
-node scripts/build-site.js && npx serve public   # or any static server
-```
-
-The hosting build **does not run Chromium**. The PDFs need a headless browser
-and `fonts-noto-cjk`, neither of which a serverless build image has, so they are
-generated locally and committed; `build-site.js` only copies files and writes one
-HTML page. That is why `installCommand` is a no-op and the build finishes in
-seconds on any static host.
-
----
-
-## Repository layout
-
-```
-├── research/
-│   ├── video-analysis.md      evidence record for the reference video
-│   └── method-synthesis.md    the abstraction, and what is mine vs. his
-├── schema/exam.schema.json    the contract
-├── examples/                  four unrelated exams, four archetypes, two languages
-│   ├── law.yaml               행정심판/행정소송/이의신청 — 10 columns, splits across pages
-│   ├── it.yaml                TCP/UDP, CPU scheduling (primary)
-│   ├── calculation.yaml       NPV/IRR/Payback/PI, depreciation methods
-│   └── conceptual.yaml        motivation theories, reliability vs validity
-├── src/
-│   ├── lib/archetypes.js      L2 column sets + marker definitions
-│   ├── lib/model.js           load, validate, resolve cell references
-│   ├── lib/layout.js          orientation and column-splitting
-│   ├── lib/recall.js          deterministic cell withholding
-│   ├── render.js              every page template
-│   ├── blank.js               the handwriting templates
-│   └── styles.css             the print design system
-├── tools/
-│   ├── editor.template.html   editor source (edit this)
-│   └── editor.html            built, self-contained (js-yaml inlined)
-├── scripts/
-│   ├── build.js               YAML → notes PDFs
-│   ├── build-blank.js         → output/blank/
-│   ├── build-editor.js        → tools/editor.html
-│   ├── init-exam.js           scaffold a new exam
-│   └── visual-qa.js           inspect the generated PDFs
-└── output/
-    ├── universal-study-notes*.pdf
-    ├── examples/              the other three worked examples
-    └── blank/                 handwriting templates
+sudo apt-get install fonts-noto-cjk poppler-utils
+npm run pdf:all      # YAML -> PDF
+npm run pdf:qa       # 생성된 PDF 38종 검사
 ```
 
 ---
 
-## Design lineage from the reference video
+## 개발
 
-The primary reference is
-**[youtube.com/watch?v=X3Wh-l7V8oA](https://www.youtube.com/watch?v=X3Wh-l7V8oA)**
-— 문사탐, *만점을 위한 셀프엑셀표 만들기 I 디테일을 잡아야 만점이 나온다!!!*,
-published 2020-01-30, 8:48.
+```bash
+npm install
+npm run dev          # 개발 서버
+npm run build        # dist/ 로 프로덕션 빌드 (+ PDF·레거시 편집기 복사)
+npm run preview      # 빌드 결과 확인
 
-**Access, stated honestly.** This session's network policy blocked
-`youtube.com` and every video front-end. **I did not watch the video and have not
-seen its Excel table**, so nothing here imitates its visual design, and there are
-no quotations from speech and no spoken-word timestamps — the auto-generated
-Korean captions provably exist but were not retrievable. What I did retrieve,
-first-party via YouTube's own API, was the video's full description, the pinned
-author comment, the public comment thread, and the descriptions of four sibling
-videos shipping the same artefact. For a method explainer, the creator's own
-prose about the method is strong evidence. Full record and limitations:
-[`research/video-analysis.md`](research/video-analysis.md).
+npm run typecheck    # tsc --noEmit
+npm test             # 도메인·마이그레이션·저장소·PDF 브리지 (vitest)
+npm run test:e2e     # 학습 루프 전체 (playwright)
+npm run test:all     # 위 전부 + 레거시 렌더러 패리티
+```
 
-*(The brief described this as a "57-second clip". It is 8 minutes 48 seconds; the
-`&t=40s` in the supplied URL is a start offset, not a clip boundary.)*
+### 구조
 
-### What the evidence showed
+```
+src/
+  domain/          순수 로직. React 도 IndexedDB 도 모릅니다.
+    models.ts        어휘
+    review/
+      scheduler.ts   복습 간격 — 규칙이 전부 여기 있습니다
+      queue.ts       무엇을, 어떤 순서로 (인터리빙 포함)
+    matrix.ts        빈칸 선정, 칸별 통계
+    confusion.ts     헷갈리는 짝 그래프, 비교표 제안
+    weakness.ts      진단
+    examEve.ts       L1/L2/L3 압축
+    labels.ts        학습자가 읽는 모든 문장
+  data/            저장과 이동
+    db.ts            IndexedDB 스키마
+    repo.ts          IndexedDB 를 만지는 유일한 곳
+    migrations/      버전별 변환
+    import/legacy.ts v1(YAML·예전 편집기) → v2
+    export/          백업 · YAML · 인쇄용 v1 파일 생성
+  pdf/             원래 있던 인쇄 엔진. 재작성하지 않았습니다.
+    render.js        페이지 템플릿 (702줄)
+    lib/             레이아웃 · 빈칸 생성 · 정규화 · 마커
+    print.css        인쇄 디자인 시스템
+  features/        화면
+  app/             셸 · 라우팅 · 훅
+legacy/editor/     예전 단일 파일 편집기. 패리티 테스트와 함께 보존.
+```
 
-- The 셀프엑셀표 is categorised by its author, repeatedly, as an **오답노트** — an
-  *error notebook*. It is not a summary device. *"이 방식으로 오답을 정리해서
-  디테일을 잡으면 만점은 따라옵니다."*
-- Its purpose is **디테일** — detail. The title is literally "you have to nail
-  the details to get full marks".
-- The sibling videos are titled **"3개년 기출 표현 익히기 엑셀표"** — an Excel
-  table for learning **three years of past-exam *expressions***, organised by
-  syllabus unit. The payoff is stated as recognition: *"시험장에서 너무 비슷하게
-  나와서"* — because it comes out so similarly in the exam hall.
-- Another is titled **"일탈이론 총정리 — 개념, 엑셀표, 문제풀이"**: concept →
-  Excel table → problem practice. The table is a stage in a pipeline.
-- A 2026 video names the whole system: keyword skeleton → 스펙트럼 엑셀표
-  (detail) → **에센셜 엑셀표 — 매주 누적되는 복습 시스템** (weekly cumulative
-  review) → 엑셀표 노트 ("**본인만의** 최종 무기") → problem drills. And:
-  *"10시간 공부한 학생보다 1~2시간 공부한 학생이 더 잘 나온다"* — structure beats
-  volume.
-- Decisively for this project, the creator writes, unprompted: *"제 채널에
-  **공무원시험** 준비하시는 분들이 많이 계신걸 알고 있어요! 이 엑셀표로
-  공부하시면 도움이 되실거에요!"* — **generalising the method to
-  certification/civil-service exams is his claim about his own artefact, not my
-  extrapolation.** A commenter independently reaches for it as *"법공부 아웃풋
-  연습"* — output practice for law study.
+두 가지 원칙이 이 구조를 지탱합니다.
 
-### Preserved
+**도메인 로직은 React 컴포넌트 안에 살지 않습니다.** 스케줄러, 채점, 큐 구성,
+비교표 관계, 마이그레이션은 전부 브라우저 없이 테스트됩니다.
 
-- **Discrimination as the unit of storage.** Confusable items side by side on
-  shared axes. This is the invariant.
-- **The examiner's wording as first-class content**, not metadata — hence
-  `tested_as`, trap `cue`, and the evidence table.
-- **Error-driven intake.** The matrix grows from wrong answers.
-- **Detail as the win condition** — `EXCEPTION` and `TRAP` carry the heaviest
-  visual weight on the page.
-- **Table as a stage, not a destination** — the topic page order is essentials →
-  matrix → distinction → traps → evidence, and the compression ladder ends it.
-- **Cumulative, scheduled review**, kept deliberately minimal.
-- **The artefact must be learner-built.** `npm run init` scaffolds an *empty*
-  schema, and every matrix page carries a "detail I added myself" block. A
-  downloaded table is only a starting schema — that is his position, not a
-  disclaimer.
+**인쇄 엔진은 다시 쓰지 않았습니다.** `src/pdf/` 는 원래 저장소의 코드
+그대로이고, 순수 ESM 이라 Vite 가 그대로 번들합니다. 화면에서 인쇄한 문서와
+`npm run pdf` 가 만든 문서는 같은 코드에서 나옵니다.
 
-### Generalised
+상태 관리 라이브러리는 쓰지 않았습니다. 영속 상태는 이미 IndexedDB 에 있고,
+React 가 필요한 것은 한 시험분의 캐시된 읽기와 "바뀌었다"는 신호뿐입니다.
+그건 [`src/data/store.ts`](src/data/store.ts) 백 줄이면 됩니다.
 
-- **One subject-specific spreadsheet → six archetypes.** His two subjects were
-  both memorisation-heavy humanities. A calculation exam does not reward
-  recalling a formula, it rewards *selecting* one under a trigger condition — so
-  for that archetype the axes became `when_to_use` / `common_mistake` /
-  `similar_formula`. Same structure, different question asked of it.
-- **A fixed sheet → a three-level schema**, so the axes can change per topic
-  without redesigning pages.
-- **A screen spreadsheet → a print document**: A4, duplex, grayscale-redundant
-  markers, safe trim margins, handwriting space.
+### 배포
 
-### Added, and not his
+Vercel 기준 설정이 [`vercel.json`](vercel.json) 에 있습니다.
+`npm run build` → `dist/`. 정적 파일만 나오므로 어떤 정적 호스트에도 올라갑니다.
 
-Stated separately so the lineage stays honest. These solve problems a Korean CSAT
-instructor did not have.
-
-- **A generated Recall Edition and answer key.** He reviews the same sheet
-  weekly; mechanically withholding cells removes the discipline problem, because
-  you cannot accidentally read the answer. This is the most substantive addition.
-- **Version tracking** (`syllabus_version`, `as_of`, the `UPDATE` marker). CSAT
-  content is stable year to year; law and IT syllabi are not.
-- **A formal decisive-distinction prompt.** His side-by-side layout implies it;
-  forcing it into one written sentence makes it explicit.
-- **Structural error → cell references**, validated at build time.
-- **A blueprint page with domain weights.** Certifications publish weightings;
-  CSAT's are fixed and known.
-
-### Not claimed
-
-I do not know the column headers of his actual spreadsheet, or what is said at
-any second of the video. The method's components — retrieval practice,
-interleaved comparison, error-driven correction, spacing — are individually
-well-supported in the learning-science literature; *this packaging* of them has
-not been tested, and the source's "만점은 따라옵니다" is promotional. Reasoning in
-[`research/method-synthesis.md`](research/method-synthesis.md) §2.
+빌드는 Chromium 을 실행하지 않습니다. PDF 는 한글 폰트가 필요해서 로컬에서
+만들어 커밋하고, 빌드는 복사만 합니다.
 
 ---
 
-## Sample data
+## 문서
 
-Everything in `examples/` is **illustrative sample data written to exercise the
-template**, not verified study material. The law example in particular is not
-legal advice. Verify against primary sources before relying on any of it.
+- [`docs/rebuild-audit.md`](docs/rebuild-audit.md) — 이번 재구축 전 저장소를
+  컴포넌트별로 판정한 기록
+- [`research/method-synthesis-v2.md`](research/method-synthesis-v2.md) — 이 도구가
+  구현한 학습 방법과, 그 근거
+- [`research/video-analysis.md`](research/video-analysis.md) — 참고 영상 조사 기록
+  (영상 자체에 접근하지 못했던 사정을 포함해 그대로 보존)
+- [`research/method-synthesis.md`](research/method-synthesis.md) — 인쇄 도구 시절의
+  방법론 문서
+- [`schema/exam.schema.json`](schema/exam.schema.json) — v1 YAML 계약
+
+---
+
+## 만들어진 배경
+
+방법론의 출발점은 문사탐 / 문서연의
+[「만점을 위한 셀프엑셀표 만들기」](https://www.youtube.com/watch?v=X3Wh-l7V8oA)
+입니다. 원저자가 이 방식을 반복해서 **오답노트**로 규정한다는 점이 이 도구의
+전제입니다 — 아는 것을 옮겨 적는 곳이 아니라, 틀린 것과 흔들린 것을 모으는 곳.
+
+무엇이 원저자의 것이고 무엇이 이쪽에서 더한 것인지는
+[`research/method-synthesis-v2.md`](research/method-synthesis-v2.md) 에 나눠
+적었습니다.
+
+`examples/` 의 내용은 **템플릿 시연용 예시**입니다. 검증된 학습 자료가 아니며,
+법률 예시는 법률 자문이 아닙니다. 실제 시험 준비에는 원문으로 확인하십시오.

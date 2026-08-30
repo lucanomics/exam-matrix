@@ -274,7 +274,7 @@ export function SettingsScreen() {
               disabled={exams.some((e) => e.title === SAMPLE_TITLE)}
               onClick={() => void addSample()}
             >
-              예시 시험 추가
+              예시 시험 불러오기
             </button>
             <div className="spacer" />
             <button type="button" className="btn btn--sm btn--danger" onClick={() => setConfirmWipe(true)}>
